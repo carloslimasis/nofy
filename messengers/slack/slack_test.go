@@ -28,7 +28,9 @@ func TestNewSlackMessenger(t *testing.T) {
 							},
 						},
 					},
-				}),
+				},
+			),
+			WithHttpClient(http.DefaultClient),
 		)
 
 		assert.IsNil(t, err)
