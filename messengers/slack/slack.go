@@ -20,11 +20,12 @@ type HTTPClient interface {
 
 // Slack is a client to send messages to Slack.
 type Slack struct {
-	requester request.Requester
-	URL       string
-	Token     string
-	Message   Message
-	Timeout   time.Duration
+	requester  request.Requester
+	URL        string
+	Token      string
+	Message    Message
+	Timeout    time.Duration
+	HttpClient HTTPClient
 }
 
 // Message is the message to send to Slack.
@@ -101,6 +102,13 @@ func WithMessage(message Message) Option {
 	}
 }
 
+// WithHttpClient sets the Requester for the Slack client.
+func WithHttpClient(httpClient HTTPClient) Option {
+	return func(s *Slack) {
+		s.HttpClient = httpClient
+	}
+}
+
 // Send sends a message with blocks to a Slack channel.
 // Block messages are used to create rich messages with elements.
 // Doc: https://api.slack.com/reference/messaging/blocks
@@ -111,8 +119,6 @@ func (s *Slack) Send(ctx context.Context) error {
 		return fmt.Errorf("error marshaling message: %w", err)
 	}
 
-	httpClient := http.DefaultClient
-
 	resp, body, err := s.requester.Do(
 		ctx,
 		request.WithMethod(http.MethodPost),
@@ -120,7 +126,7 @@ func (s *Slack) Send(ctx context.Context) error {
 		request.WithHeader("Authorization", "Bearer "+s.Token),
 		request.WithHeader("Content-Type", "application/json"),
 		request.WithHeader("Accept", "application/json"),
-		request.WithClient(httpClient),
+		request.WithClient(s.HttpClient),
 		request.WithPayload(msg),
 	)
 	if err != nil {
