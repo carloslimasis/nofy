@@ -102,8 +102,8 @@ func WithMessage(message Message) Option {
 	}
 }
 
-// WithHttpClient sets the Requester for the Slack client.
-func WithHttpClient(httpClient HTTPClient) Option {
+// WithHTTPClient sets the Requester for the Slack client.
+func WithHTTPClient(httpClient HTTPClient) Option {
 	return func(s *Slack) {
 		s.HttpClient = httpClient
 	}

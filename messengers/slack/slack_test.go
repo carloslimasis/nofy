@@ -14,23 +14,7 @@ import (
 func TestNewSlackMessenger(t *testing.T) {
 	t.Run("should create Slack messenger successfully", func(t *testing.T) {
 		messenger, err := NewSlackMessenger(
-			WithToken("test-token"),
-			WithTimeout(5*time.Second),
-			WithMessage(
-				Message{
-					Channel: "test-channel",
-					Content: []map[string]any{
-						{
-							"type": "section",
-							"text": map[string]string{
-								"type": "mrkdwn",
-								"text": "Hello, World!",
-							},
-						},
-					},
-				},
-			),
-			WithHttpClient(http.DefaultClient),
+			WithHTTPClient(http.DefaultClient),
 		)
 
 		assert.IsNil(t, err)
