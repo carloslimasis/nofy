@@ -25,7 +25,7 @@ type Slack struct {
 	Token      string
 	Message    Message
 	Timeout    time.Duration
-	HttpClient HTTPClient
+	HTTPClient HTTPClient
 }
 
 // Message is the message to send to Slack.
@@ -105,7 +105,7 @@ func WithMessage(message Message) Option {
 // WithHTTPClient sets the Requester for the Slack client.
 func WithHTTPClient(httpClient HTTPClient) Option {
 	return func(s *Slack) {
-		s.HttpClient = httpClient
+		s.HTTPClient = httpClient
 	}
 }
 
@@ -126,7 +126,7 @@ func (s *Slack) Send(ctx context.Context) error {
 		request.WithHeader("Authorization", "Bearer "+s.Token),
 		request.WithHeader("Content-Type", "application/json"),
 		request.WithHeader("Accept", "application/json"),
-		request.WithClient(s.HttpClient),
+		request.WithClient(s.HTTPClient),
 		request.WithPayload(msg),
 	)
 	if err != nil {
